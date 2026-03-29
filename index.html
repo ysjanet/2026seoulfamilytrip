@@ -274,16 +274,15 @@
         // ==========================================
         // ⚠️ 關鍵修復：這裡的 databaseURL 必須正確
         // ==========================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyDX9nObgvU0GHNpaAxnbQfeScn7z-ly5Tc",
-            authDomain: "seoul-family-trip.firebaseapp.com",
-            databaseURL: "https://seoul-family-trip-default-rtdb.firebaseio.com/", // 加入了亞洲區的預設後綴
-            projectId: "seoul-family-trip",
-            storageBucket: "seoul-family-trip.firebasestorage.app",
-            messagingSenderId: "646665337395",
-            appId: "1:646665337395:web:31549121e0e94731240146"
-        };
-
+            const firebaseConfig = {
+    apiKey: "AIzaSyDX9nObgvU0GHNpaAxnbQfeScn7z-ly5Tc",
+    authDomain: "seoul-family-trip.firebaseapp.com",
+    databaseURL: "https://seoul-family-trip-default-rtdb.firebaseio.com", // ← 請改成這個！
+    projectId: "seoul-family-trip",
+    storageBucket: "seoul-family-trip.firebasestorage.app",
+    messagingSenderId: "646665337395",
+    appId: "1:646665337395:web:31549121e0e94731240146"
+};
         window.sites = [];
         window.expenses = [];
         window.shopping = [];

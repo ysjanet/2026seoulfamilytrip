@@ -1,462 +1,446 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>首爾和風旅伴 - 全功能聯網版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    //cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    //fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --kawaii-pink: #ffdae0;
+            --kawaii-blue: #d1e9ff;
+            --kawaii-brown: #5a4a42;
+            --kawaii-bg: #fff9f9;
+        }
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            background-color: var(--kawaii-bg); 
+            color: var(--kawaii-brown);
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .k-card { 
+            background: white; border-radius: 24px; 
+            border: 2px solid var(--kawaii-pink);
+            box-shadow: 4px 4px 0px var(--kawaii-pink);
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 12px 0; color: #bca096; border: none; background: none; cursor: pointer; }
+        .nav-btn.active { color: #ff8a9d; }
+        .nav-btn i { font-size: 1.3rem; margin-bottom: 4px; }
+        .nav-text { font-size: 10px; font-weight: 900; }
+
+        .day-pill {
+            padding: 8px 18px; border-radius: 18px; background: white; 
+            border: 2px solid var(--kawaii-blue); color: #88a6c4; font-weight: 900;
+            white-space: nowrap; cursor: pointer;
+        }
+        .day-pill.active { background: var(--kawaii-blue); color: #5a7b9c; border-color: #aecce9; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .btn-action { background: #ff8a9d; color: white; border-radius: 12px; font-weight: 900; box-shadow: 2px 2px 0px #e07183; transition: transform 0.1s; border:none; }
+        .btn-action:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0px #e07183; }
+        
+        input, select, textarea { border-radius: 12px; border: 2px solid #fce4e8; padding: 12px; outline: none; width: 100%; font-weight: 700; font-family: 'Noto Sans TC', sans-serif; }
+        
+        .loading-overlay { display: none; position: absolute; inset: 0; background: rgba(255,255,255,0.8); z-index: 10; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 20px; }
+        
+        .status-tag { font-size: 10px; padding: 2px 8px; border-radius: 8px; font-weight: 900; }
+        .status-open { background: #dcfce7; color: #166534; }
+        .status-closed { background: #fee2e2; color: #991b1b; }
+
+        .tab-content { padding-bottom: 120px; animation: fadeIn 0.2s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .fab { position: fixed; bottom: 100px; right: 20px; width: 56px; height: 56px; background: #ff8a9d; color: white; border-radius: 28px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 4px 4px 0px #e07183; z-index: 40; border: none; cursor: pointer; }
+        
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 24px; border: 3px solid var(--kawaii-pink); }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="zh-TW"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;首爾和風旅伴 - 全功能聯網版&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>//fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&amp;display=swap" rel="stylesheet"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>:root {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>--kawaii-pink: #ffdae0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>--kawaii-blue: #d1e9ff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>--kawaii-brown: #5a4a42;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>--kawaii-bg: #fff9f9;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>body {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Noto Sans TC', sans-serif;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: var(--kawaii-bg);<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: var(--kawaii-brown);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>-webkit-tap-highlight-color: transparent;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.k-card {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: white; border-radius: 24px;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 2px solid var(--kawaii-pink);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 4px 4px 0px var(--kawaii-pink);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transition: all 0.2s;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>overflow: hidden;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 12px 0; color: #bca096; border: none; background: none; cursor: pointer; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.nav-btn.active { color: #ff8a9d; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.nav-btn i { font-size: 1.3rem; margin-bottom: 4px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.nav-text { font-size: 10px; font-weight: 900; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.day-pill {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 8px 18px; border-radius: 18px; background: white;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 2px solid var(--kawaii-blue); color: #88a6c4; font-weight: 900;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>white-space: nowrap; cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.day-pill.active { background: var(--kawaii-blue); color: #5a7b9c; border-color: #aecce9; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.no-scrollbar::-webkit-scrollbar { display: none; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.btn-action { background: #ff8a9d; color: white; border-radius: 12px; font-weight: 900; box-shadow: 2px 2px 0px #e07183; transition: transform 0.1s; border:none; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.btn-action:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0px #e07183; }</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>input, select, textarea { border-radius: 12px; border: 2px solid #fce4e8; padding: 12px; outline: none; width: 100%; font-weight: 700; font-family: 'Noto Sans TC', sans-serif; }</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.loading-overlay { display: none; position: absolute; inset: 0; background: rgba(255,255,255,0.8); z-index: 10; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 20px; }</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.status-tag { font-size: 10px; padding: 2px 8px; border-radius: 8px; font-weight: 900; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.status-open { background: #dcfce7; color: #166534; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.status-closed { background: #fee2e2; color: #991b1b; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.tab-content { padding-bottom: 120px; animation: fadeIn 0.2s ease-in-out; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.fab { position: fixed; bottom: 100px; right: 20px; width: 56px; height: 56px; background: #ff8a9d; color: white; border-radius: 28px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 4px 4px 0px #e07183; z-index: 40; border: none; cursor: pointer; }</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.modal-content { background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 24px; border: 3px solid var(--kawaii-pink); }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 彈窗 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="modal" class="modal-overlay"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="modal-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h3 id="modal-title" class="font-black text-xl text-pink-500 mb-4"&gt;新增行程&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="space-y-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="hidden" id="edit-id"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;select id="site-day" class="w-1/3 text-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;option value="D1"&gt;D1&lt;/option&gt;&lt;option value="D2"&gt;D2&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;option value="D3"&gt;D3&lt;/option&gt;&lt;option value="D4"&gt;D4&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;option value="D5"&gt;D5&lt;/option&gt;&lt;option value="D6"&gt;D6&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;input type="time" id="site-time" class="flex-1 text-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="text" id="site-title" placeholder="景點/餐廳名稱 (例如: 陳玉華一隻雞)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-[10px] text-gray-400 font-bold px-1"&gt;✨ 系統將自動抓取門面照片、地址與無障礙資訊&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex gap-2 pt-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button onclick="closeModal()" class="flex-1 py-3 font-bold text-gray-400 bg-gray-50 rounded-xl"&gt;取消&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button onclick="saveAndSync()" class="flex-1 py-3 font-bold text-white bg-pink-400 rounded-xl shadow-[0_3px_0_#e07183]"&gt;搜尋並儲存&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 頂部 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;header class="bg-white px-5 py-4 sticky top-0 z-50 border-b-2 border-pink-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="flex justify-between items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;h1 class="text-xl font-black text-[#ff8a9d]"&gt;首爾和風小筆記 🌸&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;p id="day-display" class="text-[10px] font-bold text-blue-400 tracking-widest uppercase"&gt;DAY 1 • 智慧聯網模式&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button onclick="syncAllData()" class="text-blue-500 bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center border-2 border-blue-100 shadow-sm active:scale-90 transition-transform"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fa-solid fa-rotate"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="day-selector" class="flex gap-2 overflow-x-auto py-3 no-scrollbar mt-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- 動態生成 Day Pill --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;main class="px-4 mt-4 max-w-md mx-auto"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- 1. 行程分頁 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;section id="itinerary" class="tab-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="itinerary-list" class="space-y-6"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button onclick="openModal()" class="fab"&gt;&lt;i class="fa-solid fa-plus"&gt;&lt;/i&gt;&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- 2. 錢包分頁 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;section id="finance" class="tab-content hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="k-card p-5 mb-6 border-yellow-200 shadow-[4px_4px_0px_#fef3c7]"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;h3 class="font-black text-lg text-yellow-600 mb-4"&gt;&lt;i class="fa-solid fa-calculator mr-2"&gt;&lt;/i&gt;即時匯率換算&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex items-center gap-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;input type="number" id="krw-input" oninput="convertCurrency()" placeholder="輸入 ₩ 韓元" class="bg-yellow-50 border-yellow-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;i class="fa-solid fa-arrow-right text-yellow-300"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex-1 bg-white p-3 rounded-xl border-2 border-yellow-100 text-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="text-[10px] text-gray-400 font-bold block"&gt;港幣約&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span id="hkd-result" class="text-xl font-black text-yellow-700"&gt;0.00&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-[9px] text-yellow-600 font-bold mt-2 px-1"&gt;目前基準: 1 HKD ≈ &lt;span id="rate-display"&gt;175&lt;/span&gt; KRW&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="flex justify-between items-center mb-4 px-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="font-black text-xl text-gray-700"&gt;💸 支出小帳本&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="text-right"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-[10px] text-gray-400 font-bold"&gt;總花費 (HKD)&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="text-red-400 font-black text-xl" id="total-expense"&gt;$0.00&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="k-card p-3 flex gap-2 mb-4 border-gray-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="text" id="exp-name" placeholder="項目 (如: 晚餐)" class="flex-1 bg-gray-50 border-none"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="number" id="exp-amt" placeholder="₩" class="w-1/4 bg-gray-50 border-none text-right"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;button onclick="addExpense()" class="btn-action px-4"&gt;&lt;i class="fa-solid fa-plus"&gt;&lt;/i&gt;&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="expense-history" class="space-y-2"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- 3. 購物清單 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;section id="shopping" class="tab-content hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2 class="font-black text-2xl mb-4 text-pink-500"&gt;🛍️ 購物清單&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="k-card p-3 flex gap-2 mb-4 border-pink-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;input type="text" id="shop-input" placeholder="想買什麼？" class="flex-1 border-none bg-pink-50"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;button onclick="addShopItem()" class="btn-action px-4"&gt;&lt;i class="fa-solid fa-plus"&gt;&lt;/i&gt;&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="shopping-items" class="space-y-2"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- 4. 翻譯助理 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;section id="translate" class="tab-content hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2 class="font-black text-2xl mb-4 text-blue-500"&gt;🗣️ 常用韓文&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="translation-list" class="space-y-4"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/main&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 底部導航 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;nav class="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-pink-100 flex justify-between px-2 pb-[env(safe-area-inset-bottom)] z-50"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button onclick="switchTab('itinerary')" id="nav-itinerary" class="nav-btn active"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;i class="fa-solid fa-map-location-dot"&gt;&lt;/i&gt;&lt;span class="nav-text"&gt;行程&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button onclick="switchTab('finance')" id="nav-finance" class="nav-btn"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;i class="fa-solid fa-wallet"&gt;&lt;/i&gt;&lt;span class="nav-text"&gt;錢包&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button onclick="switchTab('shopping')" id="nav-shopping" class="nav-btn"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;i class="fa-solid fa-heart"&gt;&lt;/i&gt;&lt;span class="nav-text"&gt;清單&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button onclick="switchTab('translate')" id="nav-translate" class="nav-btn"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;i class="fa-solid fa-comment-dots"&gt;&lt;/i&gt;&lt;span class="nav-text"&gt;翻譯&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/nav&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>// --- 設定 ---</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const apiKey = "";<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const appId = typeof __app_id !== 'undefined' ? __app_id : 'seoul-smart-helper-v5';</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// --- 初始資料 ---</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let sites = JSON.parse(localStorage.getItem('smart_sites_v5')) || [</p>
-<p class="p1"><span class="Apple-converted-space">            </span>{ id: 1, day: "D1", time: "11:00", title: "永登浦站 樂天百貨", address: "首爾特別市永登浦區京仁路846", hours: "10:30-20:00", elevator: "3號出口升降機直達百貨大門", img: "https://placehold.co/600x400/ffdae0/5a4a42?text=%E6%B0%B8%E7%99%BB%E6%B5%A6%E7%AB%99+%E6%A8%82%E5%A4%A9%E7%99%BE%E8%B2%A8" }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let expenses = JSON.parse(localStorage.getItem('smart_exp_v5')) || [];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let shopping = JSON.parse(localStorage.getItem('smart_shop_v5')) || [];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let currentDay = "D1";</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let exchangeRate = 175;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// --- 初始化 ---</p>
-<p class="p1"><span class="Apple-converted-space">        </span>async function init() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>renderDaySelectors();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>renderItinerary();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>renderExpenses();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>renderShopping();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>renderTranslations();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>updateLiveExchangeRate();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// --- 核心：聯網同步地點資訊 ---</p>
-<p class="p1"><span class="Apple-converted-space">        </span>async function syncSiteData(id) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const site = sites.find(s =&gt; s.id === id);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if(!site) return;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const card = document.getElementById(`card-${id}`);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if(card) card.querySelector('.loading-overlay').style.display = 'flex';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const systemPrompt = `你是一個專業首爾導遊。請針對使用者提供的「景點或餐廳名稱」，搜尋 Google Maps 與韓國在地資訊。</p>
-<p class="p1"><span class="Apple-converted-space">            </span>必須回傳 JSON 格式：</p>
-<p class="p1"><span class="Apple-converted-space">            </span>{</p>
-<p class="p1"><span class="Apple-converted-space">                </span>"address": "中文完整地址",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>"hours": "今日營業時間 (如 11:00-22:00)",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>"elevator": "最近的無障礙電梯出口編號或位置詳細描述",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>"photo_hint": "精確的門面外觀特徵描述"</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}`;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const userQuery = `景點名稱：${site.title}。請提供地址、營業時間及輪椅升降機資訊。`;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>try {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if(apiKey) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>method: 'POST',</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>headers: { 'Content-Type': 'application/json' },</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>body: JSON.stringify({</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>contents: [{ parts: [{ text: userQuery }] }],</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>systemInstruction: { parts: [{ text: systemPrompt }] },</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>generationConfig: { responseMimeType: "application/json" },</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>tools: [{ "google_search": {} }]</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>})</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>});</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const result = await response.json();</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>if(result.candidates &amp;&amp; result.candidates[0].content.parts[0].text) {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>const info = JSON.parse(result.candidates[0].content.parts[0].text);</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>site.address = info.address;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>site.hours = info.hours;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>site.elevator = info.elevator;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>// 修正 1：換成不會失效的 Placehold 圖片佔位符</p>
-<p class="p1"><span class="Apple-converted-space">                </span>site.img = `https://placehold.co/600x400/ffdae0/5a4a42?text=${encodeURIComponent(site.title)}`;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>saveSites();</p>
-<p class="p1"><span class="Apple-converted-space">                </span>renderItinerary();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>} catch (error) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>console.error("Sync Error:", error);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if(card) card.querySelector('.loading-overlay').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function renderItinerary() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const list = document.getElementById('itinerary-list');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const filtered = sites.filter(s =&gt; s.day === currentDay).sort((a,b) =&gt; a.time.localeCompare(b.time));</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>list.innerHTML = filtered.map(s =&gt; `</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="card-${s.id}" class="k-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="loading-overlay"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="animate-spin rounded-full h-10 w-10 border-4 border-pink-400 border-t-transparent mb-2"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-[10px] font-black text-pink-500 uppercase tracking-widest"&gt;Searching Info...&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="relative"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;img src="${s.img || 'https://placehold.co/600x400/ffdae0/5a4a42?text=Searching...'}" class="w-full h-44 object-cover"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="absolute top-3 right-3 flex gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                             </span>&lt;button onclick="syncSiteData(${s.id})" class="bg-white/90 p-2.5 rounded-full shadow-lg text-blue-500 active:scale-90"&gt;&lt;i class="fa-solid fa-arrows-rotate text-sm"&gt;&lt;/i&gt;&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                             </span>&lt;button onclick="deleteSite(${s.id})" class="bg-white/90 p-2.5 rounded-full shadow-lg text-red-400"&gt;&lt;i class="fa-solid fa-trash-can text-sm"&gt;&lt;/i&gt;&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h4 class="font-black text-white text-lg leading-tight"&gt;${s.title}&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-[10px] text-gray-300 font-bold mt-1"&gt;&lt;i class="fa-solid fa-location-dot mr-1"&gt;&lt;/i&gt;${s.address || '待更新地址'}&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="p-4 space-y-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex justify-between items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-[11px] font-black text-blue-500 bg-blue-50 px-3 py-1 rounded-full"&gt;&lt;i class="fa-regular fa-clock mr-1"&gt;&lt;/i&gt;預計 ${s.time}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="status-tag ${s.hours ? 'status-open' : 'status-closed'}"&gt;${s.hours || '確認營業中...'}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="bg-green-50 p-3 rounded-2xl border-2 border-green-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-[11px] text-green-700 font-black mb-1"&gt;&lt;i class="fa-solid fa-wheelchair mr-1"&gt;&lt;/i&gt; 無障礙升降機資訊：&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-[13px] text-gray-600 font-bold leading-relaxed"&gt;${s.elevator || '正在搜尋最近出口...'}&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex gap-2 pt-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;a href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(s.title + ' Seoul')}" target="_blank" class="flex-1 text-center py-2.5 bg-pink-50 text-pink-500 rounded-xl font-black text-xs"&gt;Google Map&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;a href="https://map.naver.com/v5/search/${encodeURIComponent(s.title)}" target="_blank" class="flex-1 text-center py-2.5 bg-green-50 text-green-600 rounded-xl font-black text-xs"&gt;Naver Map&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>`).join('');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if(filtered.length === 0) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>list.innerHTML = `&lt;div class="text-center py-20"&gt;&lt;i class="fa-solid fa-mug-hot text-4xl text-pink-100 mb-3"&gt;&lt;/i&gt;&lt;p class="text-gray-300 font-black"&gt;Day ${currentDay.replace('D','')} 暫無行程&lt;/p&gt;&lt;/div&gt;`;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// --- 錢包與匯率 ---</p>
-<p class="p1"><span class="Apple-converted-space">        </span>async function updateLiveExchangeRate() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>try {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const res = await fetch('https://api.exchangerate-api.com/v4/latest/HKD');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const data = await res.json();</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if(data.rates.KRW) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>exchangeRate = data.rates.KRW;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>document.getElementById('rate-display').innerText = exchangeRate.toFixed(1);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>// 修正 2：更新即時匯率後，強制重繪算好的總金額</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>renderExpenses();</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>convertCurrency();</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>} catch(e) {}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function convertCurrency() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const val = document.getElementById('krw-input').value;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('hkd-result').innerText = val ? (val / exchangeRate).toFixed(2) : "0.00";</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function addExpense() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const name = document.getElementById('exp-name').value;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const amt = document.getElementById('exp-amt').value;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if(!name || !amt) return;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>expenses.unshift({ id: Date.now(), name, amt });</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('exp-name').value = '';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('exp-amt').value = '';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>saveExpenses(); renderExpenses();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function renderExpenses() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const list = document.getElementById('expense-history');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>let total = 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>list.innerHTML = expenses.map(e =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>total += Number(e.amt);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>return `&lt;div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-50 mb-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="font-bold text-sm text-gray-700"&gt;${e.name} &lt;span class="text-[10px] text-gray-300 ml-2"&gt;₩${Number(e.amt).toLocaleString()}&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button onclick="deleteExpense(${e.id})" class="text-gray-200"&gt;&lt;i class="fa-solid fa-circle-xmark"&gt;&lt;/i&gt;&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;`;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}).join('');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('total-expense').innerText = "$" + (total / exchangeRate).toFixed(2);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function deleteExpense(id) { expenses = expenses.filter(e =&gt; e.id !== id); saveExpenses(); renderExpenses(); }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// --- 購物清單 ---</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function addShopItem() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const input = document.getElementById('shop-input');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if(!input.value) return;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>shopping.push({ id: Date.now(), text: input.value, done: false });</p>
-<p class="p1"><span class="Apple-converted-space">            </span>input.value = ''; saveShop(); renderShopping();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function renderShopping() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const list = document.getElementById('shopping-items');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>list.innerHTML = shopping.map(s =&gt; `</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex items-center bg-white p-4 rounded-2xl shadow-sm border border-pink-50 gap-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;input type="checkbox" ${s.done ? 'checked' : ''} onchange="toggleShop(${s.id})" class="w-5 h-5 accent-pink-400"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="font-bold text-sm flex-1 ${s.done ? 'line-through text-gray-300' : 'text-gray-600'}"&gt;${s.text}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button onclick="deleteShop(${s.id})" class="text-gray-200"&gt;&lt;i class="fa-solid fa-trash-can"&gt;&lt;/i&gt;&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>`).join('');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function toggleShop(id) { const item = shopping.find(s =&gt; s.id === id); item.done = !item.done; saveShop(); renderShopping(); }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function deleteShop(id) { shopping = shopping.filter(s =&gt; s.id !== id); saveShop(); renderShopping(); }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// --- 翻譯助理 ---</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function renderTranslations() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const trans = [</p>
-<p class="p1"><span class="Apple-converted-space">                </span>{ zh: "請問電梯在哪裡？", ko: "엘리베이터가 어디에 있나요?" },</p>
-<p class="p1"><span class="Apple-converted-space">                </span>{ zh: "這個可以退稅嗎？", ko: "텍스 리펀드 가능한가요?" },</p>
-<p class="p1"><span class="Apple-converted-space">                </span>{ zh: "請給我一張收據", ko: "영수증 주세요" },</p>
-<p class="p1"><span class="Apple-converted-space">                </span>{ zh: "不好意思，我是推輪椅的", ko: "죄송합니다, 휠체어 사용자입니다" }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>];</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('translation-list').innerHTML = trans.map(t =&gt; `</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="k-card p-4 border-blue-50"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-[10px] text-blue-400 font-black mb-1"&gt;${t.zh}&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="font-black text-gray-700 text-lg mb-3"&gt;${t.ko}&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button onclick="speakKorean('${t.ko}')" class="w-full bg-blue-50 text-blue-500 py-3 rounded-xl font-black text-xs flex items-center justify-center gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;i class="fa-solid fa-volume-high"&gt;&lt;/i&gt; 播放語音</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>`).join('');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function speakKorean(text) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 修正 6：加入瀏覽器不支援 TTS 語音功能的防呆警告</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (!window.speechSynthesis) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>alert('很抱歉，您的裝置或瀏覽器不支援語音播放功能喔！');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const ut = new SpeechSynthesisUtterance(text); ut.lang = 'ko-KR'; window.speechSynthesis.speak(ut);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// --- 導覽與 Day 選擇器 ---</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function renderDaySelectors() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const container = document.getElementById('day-selector');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>container.innerHTML = ["D1", "D2", "D3", "D4", "D5", "D6"].map(d =&gt; `</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div onclick="setDay('${d}')" class="day-pill ${currentDay === d ? 'active' : ''}"&gt;${d}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>`).join('');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function setDay(d) { currentDay = d; document.getElementById('day-display').innerText = `DAY ${d.replace('D','')} • 智慧聯網模式`; renderDaySelectors(); renderItinerary(); }</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function switchTab(id) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.querySelectorAll('section').forEach(s =&gt; s.classList.add('hidden'));</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById(id).classList.remove('hidden');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.querySelectorAll('.nav-btn').forEach(b =&gt; b.classList.remove('active'));</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('nav-' + id).classList.add('active');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('day-selector').style.display = (id === 'itinerary') ? 'flex' : 'none';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// --- 輔助 ---</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function openModal() {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 修正 5：打開新增行程彈窗時，自動清空上次的輸入殘留</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('site-title').value = '';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('site-time').value = '';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('modal').style.display = 'flex';<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function closeModal() { document.getElementById('modal').style.display = 'none'; }</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>async function saveAndSync() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const title = document.getElementById('site-title').value;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const day = document.getElementById('site-day').value;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const time = document.getElementById('site-time').value;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if(!title || !time) return;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const newId = Date.now();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>sites.push({ id: newId, day, time, title, address: "", hours: "", elevator: "", img: "" });</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 修正 3：新增行程後，自動將主畫面切換到該天數</p>
-<p class="p1"><span class="Apple-converted-space">            </span>setDay(day);</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>saveSites(); closeModal(); renderItinerary();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>await syncSiteData(newId);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function deleteSite(id) { sites = sites.filter(s =&gt; s.id !== id); saveSites(); renderItinerary(); }</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// 修正 4：防止一鍵更新多筆行程時觸發 API 頻率限制 (Too Many Requests)</p>
-<p class="p1"><span class="Apple-converted-space">        </span>async function syncAllData() {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const daySites = sites.filter(s =&gt; s.day === currentDay);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>for(const s of daySites) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>await syncSiteData(s.id);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function saveSites() { localStorage.setItem('smart_sites_v5', JSON.stringify(sites)); }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function saveExpenses() { localStorage.setItem('smart_exp_v5', JSON.stringify(expenses)); }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function saveShop() { localStorage.setItem('smart_shop_v5', JSON.stringify(shopping)); }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>window.onload = init;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
+    <!-- 彈窗 -->
+    <div id="modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modal-title" class="font-black text-xl text-pink-500 mb-4">新增行程</h3>
+            <div class="space-y-3">
+                <input type="hidden" id="edit-id">
+                <div class="flex gap-2">
+                    <select id="site-day" class="w-1/3 text-sm">
+                        <option value="D1">D1</option><option value="D2">D2</option>
+                        <option value="D3">D3</option><option value="D4">D4</option>
+                        <option value="D5">D5</option><option value="D6">D6</option>
+                    </select>
+                    <input type="time" id="site-time" class="flex-1 text-sm">
+                </div>
+                <input type="text" id="site-title" placeholder="景點/餐廳名稱 (例如: 陳玉華一隻雞)">
+                <p class="text-[10px] text-gray-400 font-bold px-1">✨ 系統將自動抓取門面照片、地址與無障礙資訊</p>
+                <div class="flex gap-2 pt-2">
+                    <button onclick="closeModal()" class="flex-1 py-3 font-bold text-gray-400 bg-gray-50 rounded-xl">取消</button>
+                    <button onclick="saveAndSync()" class="flex-1 py-3 font-bold text-white bg-pink-400 rounded-xl shadow-[0_3px_0_#e07183]">搜尋並儲存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 頂部 -->
+    <header class="bg-white px-5 py-4 sticky top-0 z-50 border-b-2 border-pink-100">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-black text-[#ff8a9d]">首爾和風小筆記 🌸</h1>
+                <p id="day-display" class="text-[10px] font-bold text-blue-400 tracking-widest uppercase">DAY 1 • 智慧聯網模式</p>
+            </div>
+            <button onclick="syncAllData()" class="text-blue-500 bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center border-2 border-blue-100 shadow-sm active:scale-90 transition-transform">
+                <i class="fa-solid fa-rotate"></i>
+            </button>
+        </div>
+        <div id="day-selector" class="flex gap-2 overflow-x-auto py-3 no-scrollbar mt-2">
+            <!-- 動態生成 Day Pill -->
+        </div>
+    </header>
+
+    <main class="px-4 mt-4 max-w-md mx-auto">
+        
+        <!-- 1. 行程分頁 -->
+        <section id="itinerary" class="tab-content">
+            <div id="itinerary-list" class="space-y-6"></div>
+            <button onclick="openModal()" class="fab"><i class="fa-solid fa-plus"></i></button>
+        </section>
+
+        <!-- 2. 錢包分頁 -->
+        <section id="finance" class="tab-content hidden">
+            <div class="k-card p-5 mb-6 border-yellow-200 shadow-[4px_4px_0px_#fef3c7]">
+                <h3 class="font-black text-lg text-yellow-600 mb-4"><i class="fa-solid fa-calculator mr-2"></i>即時匯率換算</h3>
+                <div class="flex items-center gap-3">
+                    <input type="number" id="krw-input" oninput="convertCurrency()" placeholder="輸入 ₩ 韓元" class="bg-yellow-50 border-yellow-100">
+                    <i class="fa-solid fa-arrow-right text-yellow-300"></i>
+                    <div class="flex-1 bg-white p-3 rounded-xl border-2 border-yellow-100 text-center">
+                        <span class="text-[10px] text-gray-400 font-bold block">港幣約</span>
+                        <span id="hkd-result" class="text-xl font-black text-yellow-700">0.00</span>
+                    </div>
+                </div>
+                <p class="text-[9px] text-yellow-600 font-bold mt-2 px-1">目前基準: 1 HKD ≈ <span id="rate-display">175</span> KRW</p>
+            </div>
+
+            <div class="flex justify-between items-center mb-4 px-2">
+                <h2 class="font-black text-xl text-gray-700">💸 支出小帳本</h2>
+                <div class="text-right">
+                    <p class="text-[10px] text-gray-400 font-bold">總花費 (HKD)</p>
+                    <span class="text-red-400 font-black text-xl" id="total-expense">$0.00</span>
+                </div>
+            </div>
+
+            <div class="k-card p-3 flex gap-2 mb-4 border-gray-100">
+                <input type="text" id="exp-name" placeholder="項目 (如: 晚餐)" class="flex-1 bg-gray-50 border-none">
+                <input type="number" id="exp-amt" placeholder="₩" class="w-1/4 bg-gray-50 border-none text-right">
+                <button onclick="addExpense()" class="btn-action px-4"><i class="fa-solid fa-plus"></i></button>
+            </div>
+            <div id="expense-history" class="space-y-2"></div>
+        </section>
+
+        <!-- 3. 購物清單 -->
+        <section id="shopping" class="tab-content hidden">
+            <h2 class="font-black text-2xl mb-4 text-pink-500">🛍️ 購物清單</h2>
+            <div class="k-card p-3 flex gap-2 mb-4 border-pink-100">
+                <input type="text" id="shop-input" placeholder="想買什麼？" class="flex-1 border-none bg-pink-50">
+                <button onclick="addShopItem()" class="btn-action px-4"><i class="fa-solid fa-plus"></i></button>
+            </div>
+            <div id="shopping-items" class="space-y-2"></div>
+        </section>
+
+        <!-- 4. 翻譯助理 -->
+        <section id="translate" class="tab-content hidden">
+            <h2 class="font-black text-2xl mb-4 text-blue-500">🗣️ 常用韓文</h2>
+            <div id="translation-list" class="space-y-4"></div>
+        </section>
+
+    </main>
+
+    <!-- 底部導航 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-pink-100 flex justify-between px-2 pb-[env(safe-area-inset-bottom)] z-50">
+        <button onclick="switchTab('itinerary')" id="nav-itinerary" class="nav-btn active">
+            <i class="fa-solid fa-map-location-dot"></i><span class="nav-text">行程</span>
+        </button>
+        <button onclick="switchTab('finance')" id="nav-finance" class="nav-btn">
+            <i class="fa-solid fa-wallet"></i><span class="nav-text">錢包</span>
+        </button>
+        <button onclick="switchTab('shopping')" id="nav-shopping" class="nav-btn">
+            <i class="fa-solid fa-heart"></i><span class="nav-text">清單</span>
+        </button>
+        <button onclick="switchTab('translate')" id="nav-translate" class="nav-btn">
+            <i class="fa-solid fa-comment-dots"></i><span class="nav-text">翻譯</span>
+        </button>
+    </nav>
+
+    <script>
+        // --- 設定 ---
+        const apiKey = ""; 
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'seoul-smart-helper-v5';
+        
+        // --- 初始資料 ---
+        let sites = JSON.parse(localStorage.getItem('smart_sites_v5')) || [
+            { id: 1, day: "D1", time: "11:00", title: "永登浦站 樂天百貨", address: "首爾特別市永登浦區京仁路846", hours: "10:30-20:00", elevator: "3號出口升降機直達百貨大門", img: "https://placehold.co/600x400/ffdae0/5a4a42?text=%E6%B0%B8%E7%99%BB%E6%B5%A6%E7%AB%99+%E6%A8%82%E5%A4%A9%E7%99%BE%E8%B2%A8" }
+        ];
+        let expenses = JSON.parse(localStorage.getItem('smart_exp_v5')) || [];
+        let shopping = JSON.parse(localStorage.getItem('smart_shop_v5')) || [];
+        let currentDay = "D1";
+        let exchangeRate = 175;
+
+        // --- 初始化 ---
+        async function init() {
+            renderDaySelectors();
+            renderItinerary();
+            renderExpenses();
+            renderShopping();
+            renderTranslations();
+            updateLiveExchangeRate();
+        }
+
+        // --- 核心：聯網同步地點資訊 ---
+        async function syncSiteData(id) {
+            const site = sites.find(s => s.id === id);
+            if(!site) return;
+
+            const card = document.getElementById(`card-${id}`);
+            if(card) card.querySelector('.loading-overlay').style.display = 'flex';
+
+            const systemPrompt = `你是一個專業首爾導遊。請針對使用者提供的「景點或餐廳名稱」，搜尋 Google Maps 與韓國在地資訊。
+            必須回傳 JSON 格式：
+            {
+                "address": "中文完整地址",
+                "hours": "今日營業時間 (如 11:00-22:00)",
+                "elevator": "最近的無障礙電梯出口編號或位置詳細描述",
+                "photo_hint": "精確的門面外觀特徵描述"
+            }`;
+            const userQuery = `景點名稱：${site.title}。請提供地址、營業時間及輪椅升降機資訊。`;
+
+            try {
+                if(apiKey) {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: userQuery }] }],
+                            systemInstruction: { parts: [{ text: systemPrompt }] },
+                            generationConfig: { responseMimeType: "application/json" },
+                            tools: [{ "google_search": {} }]
+                        })
+                    });
+                    const result = await response.json();
+                    if(result.candidates && result.candidates[0].content.parts[0].text) {
+                        const info = JSON.parse(result.candidates[0].content.parts[0].text);
+                        site.address = info.address;
+                        site.hours = info.hours;
+                        site.elevator = info.elevator;
+                    }
+                }
+                
+                // 修正 1：換成不會失效的 Placehold 圖片佔位符
+                site.img = `https://placehold.co/600x400/ffdae0/5a4a42?text=${encodeURIComponent(site.title)}`;
+                
+                saveSites();
+                renderItinerary();
+            } catch (error) {
+                console.error("Sync Error:", error);
+                if(card) card.querySelector('.loading-overlay').style.display = 'none';
+            }
+        }
+
+        function renderItinerary() {
+            const list = document.getElementById('itinerary-list');
+            const filtered = sites.filter(s => s.day === currentDay).sort((a,b) => a.time.localeCompare(b.time));
+            
+            list.innerHTML = filtered.map(s => `
+                <div id="card-${s.id}" class="k-card">
+                    <div class="loading-overlay">
+                        <div class="animate-spin rounded-full h-10 w-10 border-4 border-pink-400 border-t-transparent mb-2"></div>
+                        <p class="text-[10px] font-black text-pink-500 uppercase tracking-widest">Searching Info...</p>
+                    </div>
+                    <div class="relative">
+                        <img src="${s.img || 'https://placehold.co/600x400/ffdae0/5a4a42?text=Searching...'}" class="w-full h-44 object-cover">
+                        <div class="absolute top-3 right-3 flex gap-2">
+                             <button onclick="syncSiteData(${s.id})" class="bg-white/90 p-2.5 rounded-full shadow-lg text-blue-500 active:scale-90"><i class="fa-solid fa-arrows-rotate text-sm"></i></button>
+                             <button onclick="deleteSite(${s.id})" class="bg-white/90 p-2.5 rounded-full shadow-lg text-red-400"><i class="fa-solid fa-trash-can text-sm"></i></button>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
+                            <h4 class="font-black text-white text-lg leading-tight">${s.title}</h4>
+                            <p class="text-[10px] text-gray-300 font-bold mt-1"><i class="fa-solid fa-location-dot mr-1"></i>${s.address || '待更新地址'}</p>
+                        </div>
+                    </div>
+                    <div class="p-4 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[11px] font-black text-blue-500 bg-blue-50 px-3 py-1 rounded-full"><i class="fa-regular fa-clock mr-1"></i>預計 ${s.time}</span>
+                            <span class="status-tag ${s.hours ? 'status-open' : 'status-closed'}">${s.hours || '確認營業中...'}</span>
+                        </div>
+                        <div class="bg-green-50 p-3 rounded-2xl border-2 border-green-100">
+                            <p class="text-[11px] text-green-700 font-black mb-1"><i class="fa-solid fa-wheelchair mr-1"></i> 無障礙升降機資訊：</p>
+                            <p class="text-[13px] text-gray-600 font-bold leading-relaxed">${s.elevator || '正在搜尋最近出口...'}</p>
+                        </div>
+                        <div class="flex gap-2 pt-1">
+                            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.title + ' Seoul')}" target="_blank" class="flex-1 text-center py-2.5 bg-pink-50 text-pink-500 rounded-xl font-black text-xs">Google Map</a>
+                            <a href="https://map.naver.com/v5/search/${encodeURIComponent(s.title)}" target="_blank" class="flex-1 text-center py-2.5 bg-green-50 text-green-600 rounded-xl font-black text-xs">Naver Map</a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            if(filtered.length === 0) {
+                list.innerHTML = `<div class="text-center py-20"><i class="fa-solid fa-mug-hot text-4xl text-pink-100 mb-3"></i><p class="text-gray-300 font-black">Day ${currentDay.replace('D','')} 暫無行程</p></div>`;
+            }
+        }
+
+        // --- 錢包與匯率 ---
+        async function updateLiveExchangeRate() {
+            try {
+                const res = await fetch('https://api.exchangerate-api.com/v4/latest/HKD');
+                const data = await res.json();
+                if(data.rates.KRW) {
+                    exchangeRate = data.rates.KRW;
+                    document.getElementById('rate-display').innerText = exchangeRate.toFixed(1);
+                    // 修正 2：更新即時匯率後，強制重繪算好的總金額
+                    renderExpenses();
+                    convertCurrency();
+                }
+            } catch(e) {}
+        }
+        function convertCurrency() {
+            const val = document.getElementById('krw-input').value;
+            document.getElementById('hkd-result').innerText = val ? (val / exchangeRate).toFixed(2) : "0.00";
+        }
+        function addExpense() {
+            const name = document.getElementById('exp-name').value;
+            const amt = document.getElementById('exp-amt').value;
+            if(!name || !amt) return;
+            expenses.unshift({ id: Date.now(), name, amt });
+            document.getElementById('exp-name').value = '';
+            document.getElementById('exp-amt').value = '';
+            saveExpenses(); renderExpenses();
+        }
+        function renderExpenses() {
+            const list = document.getElementById('expense-history');
+            let total = 0;
+            list.innerHTML = expenses.map(e => {
+                total += Number(e.amt);
+                return `<div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-50 mb-2">
+                    <div class="font-bold text-sm text-gray-700">${e.name} <span class="text-[10px] text-gray-300 ml-2">₩${Number(e.amt).toLocaleString()}</span></div>
+                    <button onclick="deleteExpense(${e.id})" class="text-gray-200"><i class="fa-solid fa-circle-xmark"></i></button>
+                </div>`;
+            }).join('');
+            document.getElementById('total-expense').innerText = "$" + (total / exchangeRate).toFixed(2);
+        }
+        function deleteExpense(id) { expenses = expenses.filter(e => e.id !== id); saveExpenses(); renderExpenses(); }
+
+        // --- 購物清單 ---
+        function addShopItem() {
+            const input = document.getElementById('shop-input');
+            if(!input.value) return;
+            shopping.push({ id: Date.now(), text: input.value, done: false });
+            input.value = ''; saveShop(); renderShopping();
+        }
+        function renderShopping() {
+            const list = document.getElementById('shopping-items');
+            list.innerHTML = shopping.map(s => `
+                <div class="flex items-center bg-white p-4 rounded-2xl shadow-sm border border-pink-50 gap-3">
+                    <input type="checkbox" ${s.done ? 'checked' : ''} onchange="toggleShop(${s.id})" class="w-5 h-5 accent-pink-400">
+                    <span class="font-bold text-sm flex-1 ${s.done ? 'line-through text-gray-300' : 'text-gray-600'}">${s.text}</span>
+                    <button onclick="deleteShop(${s.id})" class="text-gray-200"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+            `).join('');
+        }
+        function toggleShop(id) { const item = shopping.find(s => s.id === id); item.done = !item.done; saveShop(); renderShopping(); }
+        function deleteShop(id) { shopping = shopping.filter(s => s.id !== id); saveShop(); renderShopping(); }
+
+        // --- 翻譯助理 ---
+        function renderTranslations() {
+            const trans = [
+                { zh: "請問電梯在哪裡？", ko: "엘리베이터가 어디에 있나요?" },
+                { zh: "這個可以退稅嗎？", ko: "텍스 리펀드 가능한가요?" },
+                { zh: "請給我一張收據", ko: "영수증 주세요" },
+                { zh: "不好意思，我是推輪椅的", ko: "죄송합니다, 휠체어 사용자입니다" }
+            ];
+            document.getElementById('translation-list').innerHTML = trans.map(t => `
+                <div class="k-card p-4 border-blue-50">
+                    <p class="text-[10px] text-blue-400 font-black mb-1">${t.zh}</p>
+                    <p class="font-black text-gray-700 text-lg mb-3">${t.ko}</p>
+                    <button onclick="speakKorean('${t.ko}')" class="w-full bg-blue-50 text-blue-500 py-3 rounded-xl font-black text-xs flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-volume-high"></i> 播放語音
+                    </button>
+                </div>
+            `).join('');
+        }
+        function speakKorean(text) {
+            // 修正 6：加入瀏覽器不支援 TTS 語音功能的防呆警告
+            if (!window.speechSynthesis) {
+                alert('很抱歉，您的裝置或瀏覽器不支援語音播放功能喔！');
+                return;
+            }
+            const ut = new SpeechSynthesisUtterance(text); ut.lang = 'ko-KR'; window.speechSynthesis.speak(ut);
+        }
+
+        // --- 導覽與 Day 選擇器 ---
+        function renderDaySelectors() {
+            const container = document.getElementById('day-selector');
+            container.innerHTML = ["D1", "D2", "D3", "D4", "D5", "D6"].map(d => `
+                <div onclick="setDay('${d}')" class="day-pill ${currentDay === d ? 'active' : ''}">${d}</div>
+            `).join('');
+        }
+        function setDay(d) { currentDay = d; document.getElementById('day-display').innerText = `DAY ${d.replace('D','')} • 智慧聯網模式`; renderDaySelectors(); renderItinerary(); }
+        
+        function switchTab(id) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('nav-' + id).classList.add('active');
+            document.getElementById('day-selector').style.display = (id === 'itinerary') ? 'flex' : 'none';
+        }
+
+        // --- 輔助 ---
+        function openModal() { 
+            // 修正 5：打開新增行程彈窗時，自動清空上次的輸入殘留
+            document.getElementById('site-title').value = '';
+            document.getElementById('site-time').value = '';
+            document.getElementById('modal').style.display = 'flex'; 
+        }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        
+        async function saveAndSync() {
+            const title = document.getElementById('site-title').value;
+            const day = document.getElementById('site-day').value;
+            const time = document.getElementById('site-time').value;
+            if(!title || !time) return;
+            const newId = Date.now();
+            sites.push({ id: newId, day, time, title, address: "", hours: "", elevator: "", img: "" });
+            
+            // 修正 3：新增行程後，自動將主畫面切換到該天數
+            setDay(day);
+            
+            saveSites(); closeModal(); renderItinerary();
+            await syncSiteData(newId);
+        }
+        
+        function deleteSite(id) { sites = sites.filter(s => s.id !== id); saveSites(); renderItinerary(); }
+        
+        // 修正 4：防止一鍵更新多筆行程時觸發 API 頻率限制 (Too Many Requests)
+        async function syncAllData() { 
+            const daySites = sites.filter(s => s.day === currentDay);
+            for(const s of daySites) {
+                await syncSiteData(s.id);
+            }
+        }
+
+        function saveSites() { localStorage.setItem('smart_sites_v5', JSON.stringify(sites)); }
+        function saveExpenses() { localStorage.setItem('smart_exp_v5', JSON.stringify(expenses)); }
+        function saveShop() { localStorage.setItem('smart_shop_v5', JSON.stringify(shopping)); }
+
+        window.onload = init;
+    </script>
 </body>
 </html>

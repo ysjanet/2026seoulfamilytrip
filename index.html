@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>首爾旅伴 - 全功能聯網版</title>
+    <title>首爾和風旅伴 - 全功能聯網版</title>
     <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" />
     <style>
         :root { 
             --kawaii-pink: #ffdae0;
@@ -20,7 +20,6 @@
             color: var(--kawaii-brown);
             -webkit-tap-highlight-color: transparent;
         }
-        
         .k-card { 
             background: white; border-radius: 24px; 
             border: 2px solid var(--kawaii-pink);
@@ -29,45 +28,40 @@
             position: relative;
             overflow: hidden;
         }
-        
         .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 12px 0; color: #bca096; border: none; background: none; cursor: pointer; }
         .nav-btn.active { color: #ff8a9d; }
         .nav-btn i { font-size: 1.3rem; margin-bottom: 4px; }
         .nav-text { font-size: 10px; font-weight: 900; }
-
         .day-pill {
             padding: 8px 18px; border-radius: 18px; background: white; 
             border: 2px solid var(--kawaii-blue); color: #88a6c4; font-weight: 900;
             white-space: nowrap; cursor: pointer;
         }
         .day-pill.active { background: var(--kawaii-blue); color: #5a7b9c; border-color: #aecce9; }
-
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        .btn-action { background: #ff8a9d; color: white; border-radius: 12px; font-weight: 900; box-shadow: 2px 2px 0px #e07183; transition: transform 0.1s; border:none; }
+        .btn-action { background: #ff8a9d; color: white; border-radius: 12px; font-weight: 900; box-shadow: 2px 2px 0px #e07183; transition: transform 0.1s; border:none; cursor: pointer; }
         .btn-action:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0px #e07183; }
-        
         input, select, textarea { border-radius: 12px; border: 2px solid #fce4e8; padding: 12px; outline: none; width: 100%; font-weight: 700; font-family: 'Noto Sans TC', sans-serif; }
         
-        .loading-overlay { display: none; position: absolute; inset: 0; background: rgba(255,255,255,0.8); z-index: 10; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 20px; }
-        
+        /* 修復隱形遮罩阻擋點擊的問題 */
+        .loading-overlay { display: none; position: absolute; inset: 0; background: rgba(255,255,255,0.8); z-index: 10; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 20px; pointer-events: none; }
         .status-tag { font-size: 10px; padding: 2px 8px; border-radius: 8px; font-weight: 900; }
         .status-open { background: #dcfce7; color: #166534; }
         .status-closed { background: #fee2e2; color: #991b1b; }
-
         .tab-content { padding-bottom: 120px; animation: fadeIn 0.2s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         .fab { position: fixed; bottom: 100px; right: 20px; width: 56px; height: 56px; background: #ff8a9d; color: white; border-radius: 28px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 4px 4px 0px #e07183; z-index: 40; border: none; cursor: pointer; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; pointer-events: none; }
+        .modal-content { background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 24px; border: 3px solid var(--kawaii-pink); pointer-events: auto; }
         
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: white; width: 100%; max-width: 350px; border-radius: 30px; padding: 24px; border: 3px solid var(--kawaii-pink); }
+        /* 當元素顯示時，恢復點擊事件 */
+        .modal-overlay[style*="display: flex"], .loading-overlay[style*="display: flex"] {
+            pointer-events: auto;
+        }
     </style>
 </head>
 <body>
-
-    <!-- 彈窗 -->
     <div id="modal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modal-title" class="font-black text-xl text-pink-500 mb-4">新增行程</h3>
@@ -84,43 +78,37 @@
                 <input type="text" id="site-title" placeholder="景點/餐廳名稱 (例如: 陳玉華一隻雞)">
                 <p class="text-[10px] text-gray-400 font-bold px-1">✨ 系統將自動抓取門面照片、地址與無障礙資訊</p>
                 <div class="flex gap-2 pt-2">
-                    <button onclick="closeModal()" class="flex-1 py-3 font-bold text-gray-400 bg-gray-50 rounded-xl">取消</button>
-                    <button onclick="saveAndSync()" class="flex-1 py-3 font-bold text-white bg-pink-400 rounded-xl shadow-[0_3px_0_#e07183]">儲存行程</button>
+                    <button onclick="closeModal()" class="flex-1 py-3 font-bold text-gray-400 bg-gray-50 rounded-xl cursor-pointer">取消</button>
+                    <button onclick="saveAndSync()" class="flex-1 py-3 font-bold text-white bg-pink-400 rounded-xl shadow-[0_3px_0_#e07183] cursor-pointer">儲存</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 頂部 -->
     <header class="bg-white px-5 py-4 sticky top-0 z-50 border-b-2 border-pink-100">
         <div class="flex justify-between items-center">
             <div>
                 <h1 class="text-xl font-black text-[#ff8a9d]">首爾和風小筆記 🌸</h1>
                 <p id="day-display" class="text-[10px] font-bold text-blue-400 tracking-widest uppercase">DAY 1 • 智慧聯網模式</p>
             </div>
-            <button onclick="syncAllData()" class="text-blue-500 bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center border-2 border-blue-100 shadow-sm active:scale-90 transition-transform">
+            <button onclick="syncAllData()" class="text-blue-500 bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center border-2 border-blue-100 shadow-sm active:scale-90 transition-transform cursor-pointer">
                 <i class="fa-solid fa-rotate"></i>
             </button>
         </div>
-        <div id="day-selector" class="flex gap-2 overflow-x-auto py-3 no-scrollbar mt-2">
-            <!-- 動態生成 Day Pill -->
-        </div>
+        <div id="day-selector" class="flex gap-2 overflow-x-auto py-3 no-scrollbar mt-2"></div>
     </header>
 
-    <main class="px-4 mt-4 max-w-md mx-auto">
-        
-        <!-- 1. 行程分頁 -->
+    <main class="px-4 mt-4 max-w-md mx-auto relative z-0">
         <section id="itinerary" class="tab-content">
             <div id="itinerary-list" class="space-y-6"></div>
-            <button onclick="openModal()" class="fab"><i class="fa-solid fa-plus"></i></button>
+            <button onclick="openModal()" class="fab cursor-pointer"><i class="fa-solid fa-plus"></i></button>
         </section>
 
-        <!-- 2. 錢包分頁 -->
         <section id="finance" class="tab-content hidden">
             <div class="k-card p-5 mb-6 border-yellow-200 shadow-[4px_4px_0px_#fef3c7]">
                 <h3 class="font-black text-lg text-yellow-600 mb-4"><i class="fa-solid fa-calculator mr-2"></i>即時匯率換算</h3>
                 <div class="flex items-center gap-3">
-                    <input type="number" id="krw-input" oninput="convertCurrency()" placeholder="輸入 ₩ 韓元" class="bg-yellow-50 border-yellow-100">
+                    <input type="number" id="krw-input" oninput="convertCurrency()" placeholder="輸入 ₩ 韓元" class="bg-yellow-50 border-yellow-100 relative z-10">
                     <i class="fa-solid fa-arrow-right text-yellow-300"></i>
                     <div class="flex-1 bg-white p-3 rounded-xl border-2 border-yellow-100 text-center">
                         <span class="text-[10px] text-gray-400 font-bold block">港幣約</span>
@@ -138,59 +126,57 @@
                 </div>
             </div>
 
-            <div class="k-card p-3 flex gap-2 mb-4 border-gray-100">
-                <input type="text" id="exp-name" placeholder="項目 (如: 晚餐)" class="flex-1 bg-gray-50 border-none">
-                <input type="number" id="exp-amt" placeholder="₩" class="w-1/4 bg-gray-50 border-none text-right">
-                <button onclick="addExpense()" class="btn-action px-4"><i class="fa-solid fa-plus"></i></button>
+            <div class="k-card p-3 flex gap-2 mb-4 border-gray-100 relative z-10">
+                <input type="text" id="exp-name" placeholder="項目 (如: 晚餐)" class="flex-1 bg-gray-50 border-none relative z-10">
+                <input type="number" id="exp-amt" placeholder="₩" class="w-1/4 bg-gray-50 border-none text-right relative z-10">
+                <button onclick="addExpense()" class="btn-action px-4 cursor-pointer relative z-10"><i class="fa-solid fa-plus"></i></button>
             </div>
             <div id="expense-history" class="space-y-2"></div>
         </section>
 
-        <!-- 3. 購物清單 -->
         <section id="shopping" class="tab-content hidden">
             <h2 class="font-black text-2xl mb-4 text-pink-500">🛍️ 購物清單</h2>
-            <div class="k-card p-3 flex gap-2 mb-4 border-pink-100">
-                <input type="text" id="shop-input" placeholder="想買什麼？" class="flex-1 border-none bg-pink-50">
-                <button onclick="addShopItem()" class="btn-action px-4"><i class="fa-solid fa-plus"></i></button>
+            <div class="k-card p-3 flex gap-2 mb-4 border-pink-100 relative z-10">
+                <input type="text" id="shop-input" placeholder="想買什麼？" class="flex-1 border-none bg-pink-50 relative z-10">
+                <button onclick="addShopItem()" class="btn-action px-4 cursor-pointer relative z-10"><i class="fa-solid fa-plus"></i></button>
             </div>
             <div id="shopping-items" class="space-y-2"></div>
         </section>
 
-        <!-- 4. 翻譯助理 -->
         <section id="translate" class="tab-content hidden">
             <h2 class="font-black text-2xl mb-4 text-blue-500">🗣️ 常用韓文</h2>
             <div id="translation-list" class="space-y-4"></div>
         </section>
-
     </main>
 
-    <!-- 底部導航 -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-pink-100 flex justify-between px-2 pb-[env(safe-area-inset-bottom)] z-50">
         <button onclick="switchTab('itinerary')" id="nav-itinerary" class="nav-btn active">
-            <i class="fa-solid fa-map-location-dot"></i><span class="nav-text">行程</span>
+            <i class="fa-solid fa-map-location-dot pointer-events-none"></i><span class="nav-text pointer-events-none">行程</span>
         </button>
         <button onclick="switchTab('finance')" id="nav-finance" class="nav-btn">
-            <i class="fa-solid fa-wallet"></i><span class="nav-text">錢包</span>
+            <i class="fa-solid fa-wallet pointer-events-none"></i><span class="nav-text pointer-events-none">錢包</span>
         </button>
         <button onclick="switchTab('shopping')" id="nav-shopping" class="nav-btn">
-            <i class="fa-solid fa-heart"></i><span class="nav-text">清單</span>
+            <i class="fa-solid fa-heart pointer-events-none"></i><span class="nav-text pointer-events-none">清單</span>
         </button>
         <button onclick="switchTab('translate')" id="nav-translate" class="nav-btn">
-            <i class="fa-solid fa-comment-dots"></i><span class="nav-text">翻譯</span>
+            <i class="fa-solid fa-comment-dots pointer-events-none"></i><span class="nav-text pointer-events-none">翻譯</span>
         </button>
     </nav>
 
     <script>
-        // --- 初始資料 ---
+        // 初始化核心資料
         let sites = JSON.parse(localStorage.getItem('smart_sites_v5')) || [
-            { id: 1, day: "D1", time: "11:00", title: "永登浦站 樂天百貨", address: "首爾特別市永登浦區京仁路846", hours: "10:30-20:00", elevator: "3號出口升降機直達百貨大門", img: "https://placehold.co/600x400/ffdae0/5a4a42?text=Lotte+Department+Store" }
+            { id: 1, day: "D1", time: "11:00", title: "永登浦站 樂天百貨", address: "首爾特別市永登浦區京仁路846", hours: "10:30-20:00", elevator: "3號出口升降機直達百貨大門", img: "https://placehold.co/600x400/ffdae0/5a4a42?text=Lotte" }
         ];
         let expenses = JSON.parse(localStorage.getItem('smart_exp_v5')) || [];
         let shopping = JSON.parse(localStorage.getItem('smart_shop_v5')) || [];
         let currentDay = "D1";
         let exchangeRate = 175;
 
-        // --- 初始化 ---
+        // 當網頁載入時啟動
+        window.addEventListener('DOMContentLoaded', init);
+
         async function init() {
             renderDaySelectors();
             renderItinerary();
@@ -200,73 +186,171 @@
             updateLiveExchangeRate();
         }
 
-        // --- 模擬同步地點資訊 ---
-        async function syncSiteData(id) {
-            const site = sites.find(s => s.id === id);
-            if(!site) return;
+        function renderDaySelectors() {
+            const container = document.getElementById('day-selector');
+            container.innerHTML = ["D1", "D2", "D3", "D4", "D5", "D6"].map(d => `
+                <div onclick="setDay('${d}')" class="day-pill ${currentDay === d ? 'active' : ''}">${d}</div>
+            `).join('');
+        }
 
-            const card = document.getElementById(`card-${id}`);
-            if(card) card.querySelector('.loading-overlay').style.display = 'flex';
+        function setDay(d) { 
+            currentDay = d; 
+            document.getElementById('day-display').innerText = `DAY ${d.replace('D','')} • 智慧聯網模式`; 
+            renderDaySelectors(); 
+            renderItinerary(); 
+        }
 
-            try {
-                // 模擬 API 延遲
-                await new Promise(r => setTimeout(r, 1000));
-                
-                // 產生安全的圖片網址 (移除有問題的中文與字串編碼)
-                site.img = "https://placehold.co/600x400/ffdae0/5a4a42?text=Seoul+Location";
-                
-                saveSites();
-                renderItinerary();
-            } catch (error) {
-                console.error("Sync Error:", error);
-                if(card) card.querySelector('.loading-overlay').style.display = 'none';
-            }
+        function switchTab(id) {
+            document.querySelectorAll('.tab-content').forEach(s => s.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('nav-' + id).classList.add('active');
+            document.getElementById('day-selector').style.display = (id === 'itinerary') ? 'flex' : 'none';
         }
 
         function renderItinerary() {
             const list = document.getElementById('itinerary-list');
             const filtered = sites.filter(s => s.day === currentDay).sort((a,b) => a.time.localeCompare(b.time));
             
+            if(filtered.length === 0) {
+                list.innerHTML = `<div class="text-center py-20"><i class="fa-solid fa-mug-hot text-4xl text-pink-100 mb-3"></i><p class="text-gray-300 font-black">Day ${currentDay.replace('D','')} 暫無行程</p></div>`;
+                return;
+            }
+
             list.innerHTML = filtered.map(s => `
-                <div id="card-${s.id}" class="k-card">
-                    <div class="loading-overlay">
-                        <div class="animate-spin rounded-full h-10 w-10 border-4 border-pink-400 border-t-transparent mb-2"></div>
-                        <p class="text-[10px] font-black text-pink-500 uppercase tracking-widest">Searching Info...</p>
-                    </div>
+                <div id="card-${s.id}" class="k-card relative z-10">
                     <div class="relative">
-                        <img src="${s.img || 'https://placehold.co/600x400/ffdae0/5a4a42?text=Searching...'}" class="w-full h-44 object-cover">
-                        <div class="absolute top-3 right-3 flex gap-2">
-                             <button onclick="deleteSite(${s.id})" class="bg-white/90 p-2.5 rounded-full shadow-lg text-red-400"><i class="fa-solid fa-trash-can text-sm"></i></button>
+                        <img src="${s.img}" class="w-full h-44 object-cover">
+                        <div class="absolute top-3 right-3 flex gap-2 z-20">
+                             <button onclick="deleteSite(${s.id})" class="bg-white/90 p-2.5 rounded-full shadow-lg text-red-400 cursor-pointer relative"><i class="fa-solid fa-trash-can text-sm pointer-events-none"></i></button>
                         </div>
                         <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
                             <h4 class="font-black text-white text-lg leading-tight">${s.title}</h4>
-                            <p class="text-[10px] text-gray-300 font-bold mt-1"><i class="fa-solid fa-location-dot mr-1"></i>${s.address || '待更新地址'}</p>
+                            <p class="text-[10px] text-gray-300 font-bold mt-1"><i class="fa-solid fa-location-dot mr-1"></i>${s.address || '待更新'}</p>
                         </div>
                     </div>
                     <div class="p-4 space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[11px] font-black text-blue-500 bg-blue-50 px-3 py-1 rounded-full"><i class="fa-regular fa-clock mr-1"></i>預計 ${s.time}</span>
-                        </div>
+                        <span class="text-[11px] font-black text-blue-500 bg-blue-50 px-3 py-1 rounded-full"><i class="fa-regular fa-clock mr-1"></i>預計 ${s.time}</span>
                         <div class="bg-green-50 p-3 rounded-2xl border-2 border-green-100">
-                            <p class="text-[11px] text-green-700 font-black mb-1"><i class="fa-solid fa-wheelchair mr-1"></i> 無障礙升降機資訊：</p>
-                            <p class="text-[13px] text-gray-600 font-bold leading-relaxed">${s.elevator || '點擊上方地圖尋找最近出口'}</p>
-                        </div>
-                        <div class="flex gap-2 pt-1">
-                            <a href="https://www.google.com/maps/search/?api=1&query=Seoul" target="_blank" class="flex-1 text-center py-2.5 bg-pink-50 text-pink-500 rounded-xl font-black text-xs">Google Map</a>
+                            <p class="text-[11px] text-green-700 font-black mb-1"><i class="fa-solid fa-wheelchair mr-1"></i> 無障礙資訊：</p>
+                            <p class="text-[13px] text-gray-600 font-bold leading-relaxed">${s.elevator}</p>
                         </div>
                     </div>
                 </div>
             `).join('');
-
-            if(filtered.length === 0) {
-                list.innerHTML = `<div class="text-center py-20"><i class="fa-solid fa-mug-hot text-4xl text-pink-100 mb-3"></i><p class="text-gray-300 font-black">Day ${currentDay.replace('D','')} 暫無行程</p></div>`;
-            }
         }
 
-        // --- 錢包與匯率 ---
         async function updateLiveExchangeRate() {
             try {
                 const res = await fetch('https://api.exchangerate-api.com/v4/latest/HKD');
                 const data = await res.json();
                 if(data.rates.KRW) {
-                    exchangeRate = data.r
+                    exchangeRate = data.rates.KRW;
+                    document.getElementById('rate-display').innerText = exchangeRate.toFixed(1);
+                    renderExpenses();
+                }
+            } catch(e) {}
+        }
+
+        function convertCurrency() {
+            const val = document.getElementById('krw-input').value;
+            document.getElementById('hkd-result').innerText = val ? (val / exchangeRate).toFixed(2) : "0.00";
+        }
+
+        function addExpense() {
+            const name = document.getElementById('exp-name').value;
+            const amt = document.getElementById('exp-amt').value;
+            if(!name || !amt) return;
+            expenses.unshift({ id: Date.now(), name, amt });
+            document.getElementById('exp-name').value = '';
+            document.getElementById('exp-amt').value = '';
+            saveData(); renderExpenses();
+        }
+
+        function renderExpenses() {
+            const list = document.getElementById('expense-history');
+            let total = 0;
+            list.innerHTML = expenses.map(e => {
+                total += Number(e.amt);
+                return `<div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-50 mb-2 relative z-10">
+                    <div class="font-bold text-sm text-gray-700">${e.name} <span class="text-[10px] text-gray-300 ml-2">₩${Number(e.amt).toLocaleString()}</span></div>
+                    <button onclick="deleteExpense(${e.id})" class="text-gray-200 cursor-pointer relative z-20"><i class="fa-solid fa-circle-xmark pointer-events-none"></i></button>
+                </div>`;
+            }).join('');
+            document.getElementById('total-expense').innerText = "$" + (total / exchangeRate).toFixed(2);
+        }
+
+        function deleteExpense(id) { expenses = expenses.filter(e => e.id !== id); saveData(); renderExpenses(); }
+
+        function addShopItem() {
+            const input = document.getElementById('shop-input');
+            if(!input.value) return;
+            shopping.push({ id: Date.now(), text: input.value, done: false });
+            input.value = ''; saveData(); renderShopping();
+        }
+
+        function renderShopping() {
+            const list = document.getElementById('shopping-items');
+            list.innerHTML = shopping.map(s => `
+                <div class="flex items-center bg-white p-4 rounded-2xl shadow-sm border border-pink-50 gap-3 relative z-10">
+                    <input type="checkbox" ${s.done ? 'checked' : ''} onchange="toggleShop(${s.id})" class="w-5 h-5 accent-pink-400 cursor-pointer relative z-20">
+                    <span class="font-bold text-sm flex-1 ${s.done ? 'line-through text-gray-300' : 'text-gray-600'}">${s.text}</span>
+                    <button onclick="deleteShop(${s.id})" class="text-gray-200 cursor-pointer relative z-20"><i class="fa-solid fa-trash-can pointer-events-none"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function toggleShop(id) { const item = shopping.find(s => s.id === id); item.done = !item.done; saveData(); renderShopping(); }
+        function deleteShop(id) { shopping = shopping.filter(s => s.id !== id); saveData(); renderShopping(); }
+
+        function renderTranslations() {
+            const trans = [
+                { zh: "請問電梯在哪裡？", ko: "엘리베이터가 어디에 있나요?" },
+                { zh: "這個可以退稅嗎？", ko: "텍스 리펀드 가능한가요?" },
+                { zh: "請給我一張收據", ko: "영수증 주세요" },
+                { zh: "不好意思，我是推輪椅的", ko: "죄송합니다, 휠체어 사용자입니다" }
+            ];
+            document.getElementById('translation-list').innerHTML = trans.map(t => `
+                <div class="k-card p-4 border-blue-50 relative z-10">
+                    <p class="text-[10px] text-blue-400 font-black mb-1">${t.zh}</p>
+                    <p class="font-black text-gray-700 text-lg mb-3">${t.ko}</p>
+                    <button onclick="speakKorean('${t.ko}')" class="w-full bg-blue-50 text-blue-500 py-3 rounded-xl font-black text-xs flex items-center justify-center gap-2 cursor-pointer relative z-20">
+                        <i class="fa-solid fa-volume-high pointer-events-none"></i> <span class="pointer-events-none">播放語音</span>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function speakKorean(text) {
+            if (!window.speechSynthesis) return alert('不支援語音播放');
+            const ut = new SpeechSynthesisUtterance(text); ut.lang = 'ko-KR'; window.speechSynthesis.speak(ut);
+        }
+
+        function openModal() { document.getElementById('modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        
+        function saveAndSync() {
+            const title = document.getElementById('site-title').value;
+            const day = document.getElementById('site-day').value;
+            const time = document.getElementById('site-time').value;
+            if(!title || !time) return;
+            sites.push({ 
+                id: Date.now(), day, time, title, 
+                address: "新增地點請確認", hours: "", 
+                elevator: "請預先查詢無障礙出口", 
+                img: `https://placehold.co/600x400/ffdae0/5a4a42?text=${encodeURIComponent(title)}` 
+            });
+            setDay(day); saveData(); closeModal(); renderItinerary();
+        }
+
+        function deleteSite(id) { sites = sites.filter(s => s.id !== id); saveData(); renderItinerary(); }
+        function syncAllData() { alert('資料已同步！'); }
+
+        function saveData() { 
+            localStorage.setItem('smart_sites_v5', JSON.stringify(sites));
+            localStorage.setItem('smart_exp_v5', JSON.stringify(expenses));
+            localStorage.setItem('smart_shop_v5', JSON.stringify(shopping));
+        }
+    </script>
+</body>
+</html>

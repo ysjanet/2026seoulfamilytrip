@@ -102,7 +102,7 @@
                 <i class="fa-solid fa-cloud"></i> <span>連線中...</span>
             </div>
         </div>
-        <div id="day-selector" class="flex gap-2 overflow-x-auto py-3 no-scrollbar mt-2"></div>
+        <div id="day-selector" class="flex gap-2 overflow-x-auto py-3 no-scrollbar mt-2" style="display: none;"></div>
     </header>
 
     <main class="px-4 mt-4 max-w-md mx-auto relative z-0">
@@ -271,41 +271,23 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
         import { getDatabase, ref, onValue, set, push, remove, update } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js";
 
-        // ==========================================
-        // ⚠️ 關鍵修復：這裡的 databaseURL 必須正確
-        // ==========================================
-            const firebaseConfig = {
-    apiKey: "AIzaSyDX9nObgvU0GHNpaAxnbQfeScn7z-ly5Tc",
-    authDomain: "seoul-family-trip.firebaseapp.com",
-    databaseURL: "https://seoul-family-trip-default-rtdb.firebaseio.com", // ← 請改成這個！
-    projectId: "seoul-family-trip",
-    storageBucket: "seoul-family-trip.firebasestorage.app",
-    messagingSenderId: "646665337395",
-    appId: "1:646665337395:web:31549121e0e94731240146"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyDX9nObgvU0GHNpaAxnbQfeScn7z-ly5Tc",
+            authDomain: "seoul-family-trip.firebaseapp.com",
+            databaseURL: "https://seoul-family-trip-default-rtdb.firebaseio.com", 
+            projectId: "seoul-family-trip",
+            storageBucket: "seoul-family-trip.firebasestorage.app",
+            messagingSenderId: "646665337395",
+            appId: "1:646665337395:web:31549121e0e94731240146"
+        };
+
         window.sites = [];
         window.expenses = [];
         window.shopping = [];
         window.currentDay = "HOME"; 
         window.exchangeRate = 175;
 
-        // 【安全升級】先載入畫面，保證不白畫面、翻譯不消失
-        window.initApp = async function() {
-            window.renderDaySelectors();
-            window.renderTranslations();
-            try {
-                const res = await fetch('https://api.exchangerate-api.com/v4/latest/HKD');
-                const data = await res.json();
-                if(data.rates.KRW) {
-                    window.exchangeRate = data.rates.KRW;
-                    window.renderExpenses();
-                }
-            } catch(e) {}
-        };
-
-        window.initApp(); // 立刻執行 UI 渲染
-
-        // 【防崩潰包裝】嘗試連線 Firebase，若網址錯誤也不會搞壞整個 App
+        // Firebase Connection
         try {
             const app = initializeApp(firebaseConfig);
             const db = getDatabase(app);
@@ -342,7 +324,6 @@
                 window.renderShopping();
             });
 
-            // 綁定全域功能到 Firebase
             window.promptEdit = function(key, field, currentValue, placeholder) {
                 let userText = prompt(`請輸入新的${placeholder}：\n(留空則保留原值)`, currentValue);
                 if (userText !== null && userText.trim() !== "") {
@@ -406,11 +387,14 @@
             window.deleteShop = function(key) { remove(ref(db, `shopping/${key}`)); };
 
         } catch (error) {
-            console.error("Firebase 連線發生嚴重錯誤:", error);
+            console.error("Firebase Error:", error);
             document.getElementById('connection-status').innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> <span>資料庫網址錯誤</span>';
             document.getElementById('connection-status').className = "cloud-status cloud-offline";
         }
 
+        // =====================================
+        // UI 渲染函數 (必須放在 initApp 前面)
+        // =====================================
         window.renderDaySelectors = function() {
             const container = document.getElementById('day-selector');
             container.innerHTML = ["D1", "D2", "D3", "D4", "D5", "D6"].map(d => `
@@ -422,7 +406,7 @@
             window.currentDay = d; 
             document.getElementById('day-display').innerText = `DAY ${d.replace('D','')} • 即時同步中`; 
             window.renderDaySelectors(); 
-            switchTab('itinerary');
+            window.switchTab('itinerary');
             window.renderItinerary(); 
         };
 
@@ -519,15 +503,40 @@
             document.getElementById('trans-modal').style.display = 'flex';
         };
 
+        // 【安全升級】放在最後面執行
+        window.initApp = async function() {
+            window.renderDaySelectors();
+            window.renderTranslations();
+            try {
+                const res = await fetch('https://api.exchangerate-api.com/v4/latest/HKD');
+                const data = await res.json();
+                if(data.rates.KRW) {
+                    window.exchangeRate = data.rates.KRW;
+                    if(document.getElementById('finance').classList.contains('hidden') === false) window.renderExpenses();
+                }
+            } catch(e) {}
+        };
+
+        window.initApp();
+
     </script>
     <script>
-        function switchTab(id) {
+        window.switchTab = function(id) {
             document.querySelectorAll('.tab-content').forEach(s => s.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('nav-' + id).classList.add('active');
 
-            if(id !== 'itinerary') {
+            if(id === 'itinerary') {
+                document.getElementById('day-selector').style.display = 'flex';
+                // 當切換到行程時，如果還是 HOME 狀態，強制跳到 D1
+                if(window.currentDay === 'HOME') {
+                    window.setDay('D1');
+                } else {
+                    window.renderItinerary();
+                }
+            } else {
+                document.getElementById('day-selector').style.display = 'none';
                 document.querySelectorAll('.day-pill').forEach(p => p.classList.remove('active'));
                 window.currentDay = "HOME";
                 if(id === 'home-info') document.getElementById('day-display').innerText = `首頁 • 航班與酒店`;

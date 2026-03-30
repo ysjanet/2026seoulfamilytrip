@@ -344,8 +344,7 @@
 
             // 綁定全域功能到 Firebase
             window.promptEdit = function(key, field, currentValue, placeholder) {
-                let userText = prompt(`請輸入新的${placeholder}：
-(留空則保留原值)`, currentValue);
+                let userText = prompt(`請輸入新的${placeholder}：\n(留空則保留原值)`, currentValue);
                 if (userText !== null && userText.trim() !== "") {
                     const updates = {};
                     updates[`sites/${key}/${field}`] = userText.trim();
@@ -354,8 +353,7 @@
             };
 
             window.changeImage = function(key) {
-                let imgUrl = prompt("請貼上新的圖片網址 (URL)：
-(留白則會自動恢復成 Google Map)", "");
+                let imgUrl = prompt("請貼上新的圖片網址 (URL)：\n(留白則會自動恢復成 Google Map)", "");
                 const updates = {};
                 updates[`sites/${key}/img`] = (imgUrl !== null && imgUrl.trim() !== "") ? imgUrl.trim() : "placehold";
                 update(ref(db), updates);
@@ -511,10 +509,8 @@
 
         window.showHotelAddress = function() {
             document.getElementById('modal-icon').className = "fa-solid fa-taxi text-4xl text-pink-200 mb-3";
-            document.getElementById('modal-zh').innerText = "請載我到這個地址，謝謝！
-(기사님, 이 주소로 가주세요. 감사합니다!)";
-            document.getElementById('modal-ko').innerText = "서울특별시 중구 장충단로 226
-(The Splaisir Seoul Dongdaemun)";
+            document.getElementById('modal-zh').innerText = "請載我到這個地址，謝謝！\n(기사님, 이 주소로 가주세요. 감사합니다!)";
+            document.getElementById('modal-ko').innerText = "서울특별시 중구 장충단로 226\n(The Splaisir Seoul Dongdaemun)";
 
             const btn = document.getElementById('modal-speak-btn');
             btn.className = "w-full py-4 bg-pink-500 text-white rounded-2xl font-black shadow-[0_4px_0_#db2777] active:translate-y-1 active:shadow-none transition-all";

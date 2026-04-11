@@ -346,6 +346,24 @@
                 }
             };
 
+            // 👇 請在這裡加入這段「移動天數」的新功能 👇
+            window.moveSite = function(key, currentDay, title) {
+                let newDay = prompt(`要將「${title}」移動到哪一天？\n(目前在 ${currentDay}，請輸入 D1 到 D6)：`, currentDay);
+                if (newDay !== null) {
+                    newDay = newDay.trim().toUpperCase();
+                    if (["D1", "D2", "D3", "D4", "D5", "D6"].includes(newDay)) {
+                        update(ref(db), { [`sites/${key}/day`]: newDay });
+                        alert(`✅ 成功將「${title}」移動到 ${newDay}！`);
+                    } else {
+                        alert("❌ 格式錯誤，請輸入 D1、D2... 等正確天數格式。");
+                    }
+                }
+            };
+                if(confirm(`確定要刪除「${title}」嗎？無法復原喔！`)) {
+                    remove(ref(db, `sites/${key}`));
+                }
+            };
+
             window.saveAndSync = function() {
                 const title = document.getElementById('site-title').value;
                 const day = document.getElementById('site-day').value;
@@ -429,7 +447,13 @@
                 <div class="k-card relative z-10">
                     <div class="relative bg-gray-200 h-44">
                         ${mediaHtml}
-                        <div class="absolute top-3 right-3 flex gap-2 z-20">
+                         <div class="absolute top-3 right-3 flex gap-2 z-20">
+                             <button onclick="changeImage('${s._key}')" class="bg-white/90 p-2.5 rounded-full shadow-lg text-blue-500 cursor-pointer relative active:scale-90"><i class="fa-solid fa-image pointer-events-none"></i></button>
+                             <!-- 👇 這是新加的紫色日曆按鈕 👇 -->
+                             <button onclick="moveSite('${s._key}', '${s.day}', '${s.title}')" class="bg-white/90 p-2.5 rounded-full shadow-lg text-purple-500 cursor-pointer relative active:scale-90"><i class="fa-solid fa-calendar-day pointer-events-none"></i></button>
+                             
+                             <button onclick="confirmDelete('${s._key}', '${s.title}')" class="bg-white/90 p-2.5 rounded-full shadow-lg text-red-400 cursor-pointer relative active:scale-90"><i class="fa-solid fa-trash-can text-sm pointer-events-none"></i></button>
+                        </div>
                              <button onclick="changeImage('${s._key}')" class="bg-white/90 p-2.5 rounded-full shadow-lg text-blue-500 cursor-pointer relative active:scale-90"><i class="fa-solid fa-image pointer-events-none"></i></button>
                              <button onclick="confirmDelete('${s._key}', '${s.title}')" class="bg-white/90 p-2.5 rounded-full shadow-lg text-red-400 cursor-pointer relative active:scale-90"><i class="fa-solid fa-trash-can text-sm pointer-events-none"></i></button>
                         </div>

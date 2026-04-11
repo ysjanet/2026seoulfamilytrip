@@ -359,10 +359,6 @@
                     }
                 }
             };
-                if(confirm(`確定要刪除「${title}」嗎？無法復原喔！`)) {
-                    remove(ref(db, `sites/${key}`));
-                }
-            };
 
             window.saveAndSync = function() {
                 const title = document.getElementById('site-title').value;

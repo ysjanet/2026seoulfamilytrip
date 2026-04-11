@@ -454,9 +454,6 @@
                              
                              <button onclick="confirmDelete('${s._key}', '${s.title}')" class="bg-white/90 p-2.5 rounded-full shadow-lg text-red-400 cursor-pointer relative active:scale-90"><i class="fa-solid fa-trash-can text-sm pointer-events-none"></i></button>
                         </div>
-                             <button onclick="changeImage('${s._key}')" class="bg-white/90 p-2.5 rounded-full shadow-lg text-blue-500 cursor-pointer relative active:scale-90"><i class="fa-solid fa-image pointer-events-none"></i></button>
-                             <button onclick="confirmDelete('${s._key}', '${s.title}')" class="bg-white/90 p-2.5 rounded-full shadow-lg text-red-400 cursor-pointer relative active:scale-90"><i class="fa-solid fa-trash-can text-sm pointer-events-none"></i></button>
-                        </div>
                         <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-4 pointer-events-none z-10">
                             <h4 onclick="promptEdit('${s._key}', 'title', '${s.title}', '景點名稱')" class="font-black text-white text-lg leading-tight editable-text inline-block">${s.title}</h4>
                             <p class="text-[10px] text-gray-300 font-bold mt-1 pointer-events-auto">
@@ -517,8 +514,8 @@
 
         window.showHotelAddress = function() {
             document.getElementById('modal-icon').className = "fa-solid fa-taxi text-4xl text-pink-200 mb-3";
-            document.getElementById('modal-zh').innerText = "請載我到這個地址，謝謝！\\n(기사님, 이 주소로 가주세요. 감사합니다!)";
-            document.getElementById('modal-ko').innerText = "서울특별시 중구 장충단로 226\\n(The Splaisir Seoul Dongdaemun)";
+            document.getElementById('modal-zh').innerText = "請載我到這個地址，謝謝！\n(기사님, 이 주소로 가주세요. 감사합니다!)";
+            document.getElementById('modal-ko').innerText = "서울특별시 중구 장충단로 226\n(The Splaisir Seoul Dongdaemun)";
             
             const btn = document.getElementById('modal-speak-btn');
             btn.className = "w-full py-4 bg-pink-500 text-white rounded-2xl font-black shadow-[0_4px_0_#db2777] active:translate-y-1 active:shadow-none transition-all";
@@ -604,9 +601,11 @@
                 document.querySelectorAll('.day-pill').forEach(p => p.classList.remove('active'));
                 window.currentDay = "HOME";
                 if(id === 'home-info') document.getElementById('day-display').innerText = `首頁 • 航班與酒店`;
-                if(id === 'finance') document.getElementById('day-display').innerText = `錢包 • 記帳與匯率`;
+                if(id === 'finance') {
+                    document.getElementById('day-display').innerText = `錢包 • 記帳與匯率`;
+                    if(window.renderExpenses) window.renderExpenses();
+                }
                 if(id === 'translate') document.getElementById('day-display').innerText = `翻譯 • 實用韓文`;
-            }
         }
         function openModal() { document.getElementById('modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('modal').style.display = 'none'; }

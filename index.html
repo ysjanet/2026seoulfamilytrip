@@ -351,7 +351,7 @@
                 let newDay = prompt(`要將「${title}」移動到哪一天？\n(目前在 ${currentDay}，請輸入 D1 到 D6)：`, currentDay);
                 if (newDay !== null) {
                     newDay = newDay.trim().toUpperCase();
-                    if (["D1", "D2", "D3", "D4", "D5", "D6"].includes(newDay)) {
+                    if (["D1四", "D2五", "D3六", "D4日", "D5一", "D6二"].includes(newDay)) {
                         update(ref(db), { [`sites/${key}/day`]: newDay });
                         alert(`✅ 成功將「${title}」移動到 ${newDay}！`);
                     } else {
@@ -411,7 +411,7 @@
         // =====================================
         window.renderDaySelectors = function() {
             const container = document.getElementById('day-selector');
-            container.innerHTML = ["D1", "D2", "D3", "D4", "D5", "D6"].map(d => `
+            container.innerHTML = ["D1四", "D2五", "D3六", "D4日", "D5一", "D6二"].map(d => `
                 <div onclick="setDay('${d}')" class="day-pill ${window.currentDay === d ? 'active' : ''}">${d}</div>
             `).join('');
         };

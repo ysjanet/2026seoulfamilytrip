@@ -64,9 +64,9 @@
             <div class="space-y-3">
                 <div class="flex gap-2">
                     <select id="site-day" class="w-1/3 text-sm">
-                        <option value="D1">D1四</option><option value="D2">D2五</option>
-                        <option value="D3">D3六</option><option value="D4">D4日</option>
-                        <option value="D5">D5一</option><option value="D6">D6二</option>
+                        <option value="D1">D1</option><option value="D2">D2</option>
+                        <option value="D3">D3</option><option value="D4">D4</option>
+                        <option value="D5">D5</option><option value="D6">D6</option>
                     </select>
                     <input type="time" id="site-time" class="flex-1 text-sm">
                 </div>
@@ -351,7 +351,7 @@
                 let newDay = prompt(`要將「${title}」移動到哪一天？\n(目前在 ${currentDay}，請輸入 D1 到 D6)：`, currentDay);
                 if (newDay !== null) {
                     newDay = newDay.trim().toUpperCase();
-                    if (["D1四", "D2五", "D3六", "D4日", "D5一", "D6二"].includes(newDay)) {
+                    if (["D1", "D2", "D3", "D4", "D5", "D6"].includes(newDay)) {
                         update(ref(db), { [`sites/${key}/day`]: newDay });
                         alert(`✅ 成功將「${title}」移動到 ${newDay}！`);
                     } else {
@@ -409,20 +409,22 @@
         // =====================================
         // UI 渲染函數 (必須放在 initApp 前面)
         // =====================================
-        window.renderDaySelectors = function() {
-            const container = document.getElementById('day-selector');
-            container.innerHTML = ["D1四", "D2五", "D3六", "D4日", "D5一", "D6二"].map(d => `
-                <div onclick="setDay('${d}')" class="day-pill ${window.currentDay === d ? 'active' : ''}">${d}</div>
-            `).join('');
-        };
+      window.renderDaySelectors = function() {
+    const container = document.getElementById('day-selector');
+    container.innerHTML = ["D1","D2","D3","D4","D5","D6"].map(d => `
+        <div onclick="setDay('${d}')" class="day-pill ${window.currentDay === d ? 'active' : ''}">
+            ${window.DAY_NAMES[d]}
+        </div>
+    `).join('');
+};
 
-        window.setDay = function(d) { 
-            window.currentDay = d; 
-            document.getElementById('day-display').innerText = `DAY ${d.replace('D','')} • 即時同步中`; 
-            window.renderDaySelectors(); 
-            window.switchTab('itinerary');
-            window.renderItinerary(); 
-        };
+        window.setDay = function(d) {
+    window.currentDay = d;
+    document.getElementById('day-display').innerText = `${window.DAY_NAMES[d]} • 即時同步中`;
+    window.renderDaySelectors();
+    window.switchTab('itinerary');
+    window.renderItinerary();
+};
 
         window.renderItinerary = function() {
             const list = document.getElementById('itinerary-list');
